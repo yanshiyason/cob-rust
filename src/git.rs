@@ -2,10 +2,10 @@ use regex::Regex;
 use std::process::Command;
 
 pub fn repository_owner() -> String {
-    return String::from(owner_and_repository().get(0).unwrap());
+    return owner_and_repository().0;
 }
 pub fn repository() -> String {
-    return String::from(owner_and_repository().get(1).unwrap());
+    return owner_and_repository().1;
 }
 
 // todo: allow a configurable suffix to be applied to branch names
@@ -49,34 +49,26 @@ pub fn checkout_branch(text: String) {
 }
 
 // priv
-fn owner_and_repository() -> Vec<String> {
-    match remote_origin() {
-        Some(val) => {
-            let re = Regex::new(r"git@github.com.*?:(.*)?/(.*)\.git$").unwrap();
-            match re.captures(&val) {
-                Some(captures) => {
-                    let host = captures
-                        .get(1)
-                        .map_or(String::from(""), |v| String::from(v.as_str()));
-                    let repository = captures
-                        .get(2)
-                        .map_or(String::from(""), |v| String::from(v.as_str()));
+fn owner_and_repository() -> (String, String) {
+    let remote_origin = remote_origin();
+    let re = Regex::new(r"git@github.com.*?:(.*)?/(.*)\.git$").unwrap();
+    let captures = re.captures(&remote_origin);
 
-                    return vec![host, repository];
-                }
-                None => {
-                    println!("remote repository is not hosted on github.com");
-                    std::process::exit(1);
-                }
-            }
-        }
-        None => {
-            println!("remote repository is not set, please add it using the \"git add remote origin\" command");
-            std::process::exit(1);
-        }
+    if let Some(captures) = captures {
+        let host = captures
+            .get(1)
+            .map_or(String::from(""), |v| String::from(v.as_str()));
+        let repository = captures
+            .get(2)
+            .map_or(String::from(""), |v| String::from(v.as_str()));
+
+        return (host, repository);
     }
+
+    println!("remote repository is not hosted on github.com");
+    std::process::exit(1);
 }
-fn remote_origin() -> Option<String> {
+fn remote_origin() -> String {
     match Command::new("git").args(&["config", "--list"]).output() {
         Ok(out) => {
             let git_config_output = std::str::from_utf8(&out.stdout).unwrap();
@@ -87,11 +79,11 @@ fn remote_origin() -> Option<String> {
                 Some(value) => {
                     // todo: validate format
                     let origin = value.split("=").last().unwrap();
-                    return Some(String::from(origin));
+                    return String::from(origin);
                 }
                 None => {
-                    println!("Not remote setup!");
-                    return None;
+                    println!("remote repository is not set, please add it using the \"git add remote origin\" command");
+                    std::process::exit(1);
                 }
             }
         }
