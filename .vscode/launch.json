@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'cob'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=cob",
+                    "--package=cob"
+                ],
+                "filter": {
+                    "name": "cob",
+                    "kind": "bin"
+                }
+            },
+            "args": ["hello", "from", "lldb", "config"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'cob'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=cob",
+                    "--package=cob"
+                ],
+                "filter": {
+                    "name": "cob",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

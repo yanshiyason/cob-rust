@@ -1,0 +1,25 @@
+[package]
+name = "cob"
+version = "0.1.0"
+authors = ["yannick <yan@shiyason.com>"]
+edition = "2018"
+description = "A cli tool for checking out git branches from github"
+readme = "README.md"
+repository = "https://github.com/yanshiyason/cob-rust/"
+license = "MIT OR Apache-2.0"
+keywords = ["cli", "git"]
+categories = ["command-line-utilities"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+futures = { version = "0.3.*"}
+regex = "1"
+reqwest = "0.10.8"
+serde = {version = "1.0", features = ["derive"]}
+serde_derive = "1.0.117"
+serde_json = "1.0.59"
+tokio = {version = "0.2.*", features = ["full"] }
+toml = "0.5.7"
+dialoguer = "0.7.1"
+console = "0.13.0"
