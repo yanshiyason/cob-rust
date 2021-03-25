@@ -10,7 +10,6 @@ pub async fn remote_cob(config: &Config) -> async_types::Result<()> {
     let username = github.username;
     let token = github.auth_token;
     let issues = github::list_issues(username, token).await.unwrap();
-    // let first = issues.get(0).unwrap();
 
     let selections: Vec<String> = issues
         .iter()
